@@ -83,9 +83,39 @@ class Customer {
     return `${this.firstName} ${this.lastName}`;
   }
 
-  async getSearched() {
-    
+  static async search(word) {
+    const results = await db.query(
+      `SELECT first_name, last_name FROM customers
+      WHERE CONCAT(first_name, ' ', last_name) ILIKE $1`,
+      [`%${word}%`]
+    );
+
+    const customers = results.rows.map(c => (
+      new Customer({
+        firstName: c.first_name,
+        lastName: c.last_name
+      })
+    ));
+    return customers;
   }
+
+  static async bestCustomers() {
+    const results = await db.query(
+      `SELECT c.first_name, c.last_name, COUNT(r.*) 
+      FROM customers AS c 
+      JOIN reservations AS r 
+      ON c.id = r.customer_id 
+      GROUP BY first_name, last_name 
+      ORDER BY COUNT(r.*) DESC LIMIT 10;`
+    );
+    return results.rows.map(c => (
+      new Customer({
+        firstName: c.first_name,
+        lastName: c.last_name
+      })
+    ));
+  }
+
 
 }
 
