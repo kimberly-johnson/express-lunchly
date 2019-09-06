@@ -101,17 +101,18 @@ class Customer {
 
   static async bestCustomers() {
     const results = await db.query(
-      `SELECT c.first_name, c.last_name, COUNT(r.*) 
+      `SELECT c.first_name, c.last_name, c.id, COUNT(r.*) 
       FROM customers AS c 
       JOIN reservations AS r 
       ON c.id = r.customer_id 
-      GROUP BY first_name, last_name 
+      GROUP BY c.first_name, c.last_name, c.id
       ORDER BY COUNT(r.*) DESC LIMIT 10;`
     );
     return results.rows.map(c => (
       new Customer({
         firstName: c.first_name,
-        lastName: c.last_name
+        lastName: c.last_name,
+        id: c.id
       })
     ));
   }

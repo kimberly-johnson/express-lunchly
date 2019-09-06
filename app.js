@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const routes = require("./routes");
 
 const app = express();
-app.use(express.json());
+
 // Parse body for urlencoded (non-JSON) data
 app.use(bodyParser.urlencoded({ extended: false }));
 

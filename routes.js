@@ -58,7 +58,7 @@ router.get("/search", async function (req, res, next) {
   }
 });
 
-router.get("/topCustomers", async function(req, res, next) {
+router.get("/topCustomers", async function (req, res, next) {
   try {
     const customers = await Customer.bestCustomers();
 
